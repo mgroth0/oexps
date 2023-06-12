@@ -1,14 +1,12 @@
 import sys
 from pathlib import Path
-
-this_file = Path(__file__)
-sys.path.append(str(this_file.parent.parent.parent.parent.parent.joinpath("src").joinpath("main").joinpath("python")))
-
 import oexp
 from oexp import access
 import os
 
-STYLE_FILE = this_file.parent.joinpath("chrometest.css")
+this_file = Path(__file__)
+
+STYLE_FILE = this_file.parent.joinpath("BRS1.css")
 
 matt_user = os.environ['MATT_USER']
 matt_pw = os.environ['MATT_PW']
