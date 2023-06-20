@@ -1,0 +1,72 @@
+body {
+    background: grey;
+}
+
+.trial-container {
+    position: absolute;
+    inset: 0;
+}
+
+
+.target-img,
+.distractor-img {
+    width: 150%;
+}
+
+.target-img {
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    transform: translateY(-50%);
+}
+
+.distractors-container {
+    position: absolute;
+    top: 50%;
+    left: 20%;
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    transform: translateY(-50%);
+}
+
+.distractor-container {
+    height: 800px;
+}
+
+.distractor-img {
+    position: absolute;
+    top: 50%;
+    /*left: 50%;*/
+    transform: translateX(-50%) translateY(-50%);
+}
+
+
+.selection-number {
+    color: white;
+    text-align: center;
+}
+
+
+.reset-btn, .continue-btn {
+    color: white;
+    text-transform: capitalize;
+    position: absolute;
+    width: 150px;
+    height: 40px;
+}
+
+.reset-btn {
+    background-color: red;
+    left: 50px;
+    bottom: 40px;
+}
+
+
+.continue-btn {
+    background-color: blue;
+    bottom: 40px;
+    right: 50px;
+}

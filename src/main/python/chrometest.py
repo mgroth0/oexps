@@ -29,7 +29,7 @@ manifests = []
 for m in range(20):
     trials = []
     for t in range(15):
-        trial = oexp.access.trial(
+        trial = oexp.access.gallery_trial(
             query=random.choice(uploaded_images),
             distractors=[random.choice(uploaded_images) for i in range(5)]
         )
