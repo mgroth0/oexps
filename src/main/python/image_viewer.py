@@ -31,7 +31,6 @@ with open(trials_json) as f:
     trials_json = json.load(f)
 
 for trial in trials_json:
-
     ims = []
     ims.append(trial["query"])
     ims.append(trial["queryGallery"])
@@ -43,36 +42,47 @@ for trial in trials_json:
             remote_rel_path=im
         )
 
-
 uploaded_images = exp.list_images()
-exists = []
-does_not_exist = []
-for u in uploaded_images:
-    local_im_file = data_root.joinpath(u)
-    if local_im_file.exists():
-        exists.append(local_im_file)
-    else:
-        does_not_exist.append(local_im_file)
 
+choices = ["Forward", "Not Forward"]
 
-
-rand = random.Random(23084)
+rand = random.Random(99753)
 manifests = []
 for m in range(20):
-    trials = []
+    trials = [
+        oexp.access.prompt(
+            text=f"""
+Welcome to the Image Viewer.
+
+We want annotate the direction that the people in these images are facing.
+
+You will be presented with an image of a person and asked to tell if they are facing forward or not.
+
+If you would say they are facing towards the camera, then please select "{choices[0]}". Otherwise, please select "{choices[1]}".
+
+Press SPACEBAR to start
+  """.strip(),
+            image=None
+        )
+    ]
     trials_json_copy = trials_json.copy()
-    rand.shuffle(trials_json_copy)
+    all_ims = []
+
     for t in trials_json_copy:
-        distractors = [t["queryGallery"], *t["distractors"]]
-        rand.shuffle(distractors)
-        trial = oexp.access.trial(
-            query=t["query"],
-            distractors=distractors
+        all_ims.append(t["query"])
+        all_ims.append(t["queryGallery"])
+        for d in t["distractors"]:
+            all_ims.append(d)
+    rand.shuffle(all_ims)
+    for an_im in all_ims:
+        trial = oexp.access.choice_trial(
+            image=an_im,
+            choices=choices
         )
         trials.append(trial)
     manifests.append(oexp.access.trial_manifest(trials))
 exp.manifests = manifests
-with open(STYLE_FILE, "r") as f:
+with open(STYLE_FILE) as f:
     exp.css = f.read()
 
 # exp.link_prolific("64887b7cd8e3bc6a8ac0ebaa")
@@ -84,4 +94,3 @@ if args.open:
     exp.open(disable_auto_fullscreen=True, allow_fullscreen_exit=True)
 
 args = parser.parse_args()
-

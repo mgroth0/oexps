@@ -43,23 +43,49 @@ for trial in trials_json:
             remote_rel_path=im
         )
 
-
-uploaded_images = exp.list_images()
-exists = []
-does_not_exist = []
-for u in uploaded_images:
-    local_im_file = data_root.joinpath(u)
-    if local_im_file.exists():
-        exists.append(local_im_file)
-    else:
-        does_not_exist.append(local_im_file)
-
-
+exp.upload_image(
+    local_abs_path="/Users/matthewgroth/registered/ide/all/k/iarpa/src/jvmTest/resources/Example_Online_BRIAR_1.jpg",
+    remote_rel_path="Example_Online_BRIAR_1.jpg"
+)
+exp.upload_image(
+    local_abs_path="/Users/matthewgroth/registered/ide/all/k/iarpa/src/jvmTest/resources/Example_Online_BRIAR_2.jpg",
+    remote_rel_path="Example_Online_BRIAR_2.jpg"
+)
 
 rand = random.Random(23084)
 manifests = []
 for m in range(20):
-    trials = []
+    trials = [
+        oexp.access.prompt(
+            text="""
+Welcome to the Face Identification experiment.
+
+We want to learn about face identification across different distances and different face orientations.
+
+You will be presented with an image of a face at the top of the screen and asked to compare it with five other face images at the bottom of the screen.
+
+Press SPACEBAR to see an example.
+  """.strip(),
+            image=None
+        ),
+        oexp.access.prompt(
+            text="""
+By clicking on the images in the bottom row, you will indicate which are the top three most similar identities to the identity at the top.
+
+Press SPACEBAR to continue example.
+	  """.strip(),
+            image="Example_Online_BRIAR_1.jpg"
+        ),
+        oexp.access.prompt(
+            text="""
+Once you have ranked your top three images, you can continue to the next trial (click blue button).
+If you want to change your choices - click the red reset button.
+
+Press SPACEBAR to start the experiment.
+	  """.strip(),
+            image="Example_Online_BRIAR_2.jpg"
+        ),
+    ]
     trials_json_copy = trials_json.copy()
     rand.shuffle(trials_json_copy)
     for t in trials_json_copy:
@@ -75,7 +101,6 @@ exp.manifests = manifests
 with open(STYLE_FILE, "r") as f:
     exp.css = f.read()
 
-
 exp.link_prolific("64887b7cd8e3bc6a8ac0ebaa")
 
 if args.print:
@@ -85,4 +110,3 @@ if args.open:
     exp.open(disable_auto_fullscreen=True, allow_fullscreen_exit=True)
 
 args = parser.parse_args()
-
