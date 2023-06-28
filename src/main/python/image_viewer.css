@@ -10,3 +10,11 @@ body {
     height: 400px;
     margin: 50px
 }
+
+.choice-img {
+    width: 200px;
+}
+
+.choices-container {
+    flex-wrap: wrap;
+}

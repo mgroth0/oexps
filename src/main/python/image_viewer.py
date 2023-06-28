@@ -1,8 +1,12 @@
+import argparse
+import glob
 import json
 import random
 from pathlib import Path
+
 import oexp
-import argparse
+
+print("NEED TO TRIM IMAGES")
 
 parser = argparse.ArgumentParser(description='Open or print experiment URL')
 # parser.add_argument('url', type=str, help='the experiment URL')
@@ -22,7 +26,6 @@ user = oexp.login(auth_json["username"], auth_json["password"])
 
 exp = user.experiment("image_viewer")
 exp.delete_all_images()
-
 extract_root = Path("/Users/matthewgroth/registered/data/BriarExtracts/BRS1_extract_for_oexp")
 data_root = extract_root.joinpath("data")
 
@@ -44,7 +47,21 @@ for trial in trials_json:
 
 uploaded_images = exp.list_images()
 
-choices = ["Forward", "Not Forward"]
+choice_folder = Path("/Users/matthewgroth/registered/data/iarpa/facial_orientations/output")
+choice_image_files = glob.glob(str(choice_folder) + "/*.png")
+choice_image_files = [choice_folder.joinpath(f) for f in choice_image_files]
+
+for c in choice_image_files:
+    exp.upload_image(
+        local_abs_path=str(c),
+        remote_rel_path=c.name
+    )
+
+choices = [
+    oexp.access.choice(value=c.name.replace(".png", ""), image=oexp.access.image(remote_path=c.name, one_shot=False))
+    for
+    c in choice_image_files]
+choices.append(oexp.access.choice(value="None", image=None))
 
 rand = random.Random(99753)
 manifests = []
@@ -56,9 +73,9 @@ Welcome to the Image Viewer.
 
 We want annotate the direction that the people in these images are facing.
 
-You will be presented with an image of a person and asked to tell if they are facing forward or not.
+You will be presented with an image of a person and asked to tell which direction they are facing.
 
-If you would say they are facing towards the camera, then please select "{choices[0]}". Otherwise, please select "{choices[1]}".
+Please select the option that has the most similar to the image. If none are similar, select "{choices[-1].value}".
 
 Press SPACEBAR to start
   """.strip(),
@@ -76,7 +93,7 @@ Press SPACEBAR to start
     rand.shuffle(all_ims)
     for an_im in all_ims:
         trial = oexp.access.choice_trial(
-            image=an_im,
+            image=oexp.access.image(remote_path=an_im, one_shot=True),
             choices=choices
         )
         trials.append(trial)

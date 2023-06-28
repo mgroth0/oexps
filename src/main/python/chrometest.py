@@ -34,8 +34,12 @@ exp.upload_image(
     remote_rel_path="Example_Online_BRIAR_2.jpg"
 )
 
-
 import random
+
+
+def im(s):
+    return oexp.access.image(remote_path=s, one_shot=True)
+
 
 manifests = []
 for m in range(20):
@@ -58,7 +62,7 @@ By clicking on the images in the bottom row, you will indicate which are the top
 
 Press SPACEBAR to continue example.
 	  """.strip(),
-            image="Example_Online_BRIAR_1.jpg"
+            image=im("Example_Online_BRIAR_1.jpg")
         ),
         oexp.access.prompt(
             text="""
@@ -67,13 +71,13 @@ If you want to change your choices - click the red reset button.
 
 Press SPACEBAR to start the experiment.
 	  """.strip(),
-            image="Example_Online_BRIAR_2.jpg"
+            image=im("Example_Online_BRIAR_2.jpg")
         ),
     ]
     for t in range(15):
         trial = oexp.access.gallery_trial(
-            query=random.choice(uploaded_images),
-            distractors=[random.choice(uploaded_images) for i in range(5)]
+            query=im(random.choice(uploaded_images)),
+            distractors=[im(random.choice(uploaded_images)) for i in range(5)]
         )
         trials.append(trial)
     manifests.append(oexp.access.trial_manifest(trials))
