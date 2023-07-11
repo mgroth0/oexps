@@ -15,7 +15,7 @@ this_file = Path(__file__)
 
 STYLE_FILE = this_file.parent.joinpath("BRS1.css")
 
-with open(this_file.parent.joinpath(".auth.json")) as f:
+with open(this_file.parent.parent.joinpath(".auth.json")) as f:
     auth_json = json.loads(f.read())
 
 user = oexp.login(auth_json["username"], auth_json["password"])

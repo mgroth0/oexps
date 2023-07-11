@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 
 this_file = Path(__file__)
-sys.path.append(str(this_file.parent.parent.parent.parent.parent.joinpath("src").joinpath("main").joinpath("python")))
+sys.path.append(str(this_file.parent.parent.parent.parent.parent.parent.joinpath("src").joinpath("main").joinpath("python")))
 
 import oexp
 from oexp import access
