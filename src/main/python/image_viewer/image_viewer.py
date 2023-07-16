@@ -50,6 +50,8 @@ if args.analyze:
     if args.open or args.print or args.hotcss:
         raise Exception("cannot use these options with analyze")
 
+
+
     data = exp.subject_data()
     print(data.to_json())
 
