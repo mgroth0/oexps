@@ -39,28 +39,17 @@ if args.local:
 else:
     import oexp
 
-
 with open(this_file.parent.parent.joinpath(".auth.json")) as f:
     auth_json = json.loads(f.read())
 
 user = oexp.login(auth_json["username"], auth_json["password"])
 exp = user.experiment("image_viewer")
 
-if args.analyze:
-    if args.open or args.print or args.hotcss:
-        raise Exception("cannot use these options with analyze")
-
-
-
-    data = exp.subject_data()
-    print(data.to_json())
-
-else:
+if not args.analyze:
 
     hotcss = args.hotcss
 
     STYLE_FILE = this_file.parent.joinpath("image_viewer.css")
-
 
     if not JUST_TRIM:
         exp.delete_all_images()
@@ -119,7 +108,6 @@ else:
         return p_value + y_value
 
 
-
     choices = sorted(choices, key=custom_comparator)
 
     choices.append(oexp.access.choice(value="None", image=None))
@@ -175,3 +163,11 @@ else:
 
     if (hotcss):
         exp.hot_css(str(STYLE_FILE))
+else:
+    if args.open or args.print or args.hotcss:
+        raise Exception("cannot use these options with analyze")
+
+    data = exp.subject_data()
+    print(data.to_json())
+
+
