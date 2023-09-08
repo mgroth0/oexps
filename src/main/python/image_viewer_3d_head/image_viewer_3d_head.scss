@@ -1,0 +1,93 @@
+body,
+body:fullscreen::backdrop {
+    /*fullscreen backdrop selector required because default browser user agent style sheet overrides this with a black background*/
+    background: #0f0f0f;
+}
+
+
+.trial-container {
+    inset: 0;
+    padding-bottom: 5%;
+    padding-left: 5%;
+    padding-right: 10%;
+    gap: 5%;
+    position: relative;
+}
+
+.target-img {
+    /*position: absolute;*/
+    height: 90%;
+    width: 25%;
+    object-fit: contain;
+    flex-basis: 25%;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.choices-container {
+    /*display: block;*/
+    display: flex;
+    //    display: grid;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    height: 90%;
+    /*max-height: 80%;*/
+    flex-shrink: 0;
+    flex-grow: 0;
+    flex-basis: 75%;
+    //    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    /*grid-template-rows: repeat(auto-fill, minmax(100px, 1fr));*/
+    /*grid-auto-rows: 1fr;*/
+    //    gap: 10px;
+    //    grid-auto-rows: 1fr;
+}
+
+.choice-btn {
+    //    height: 20%;
+    //    width: 20%;
+    flex-basis: calc(100% / var(--box-length));
+    height: calc(100% / (var(--box-length) + 1));
+    /*height: calc(100%);*/
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.choice-btn:hover {
+//    height: 200%;
+//    width: 200%;
+//    flex-basis: calc(200% / var(--box-length));
+//    height: calc(200% / (var(--box-length) + 1));
+    background: #8c8cbd;
+    outline: 5px solid black;
+    cursor: pointer;
+}
+.choice-btn:active {
+    background: #d3d372;
+}
+
+.choice-img {
+    height: 120%;
+    width: 120%;
+    object-fit: contain;
+    transform: translateX(-10%) translateY(-10%);
+//    z-index: auto;
+}
+
+
+.choice-img:hover {
+
+//        height: 200%;
+//        width: 200%;
+//        transform: translateX(-25%) translateY(-25%);
+
+//    height: 400%;
+//    width: 400%;
+//    transform: translateX(-25%) translateY(-25%);
+//    z-index: -1;
+}
+
+

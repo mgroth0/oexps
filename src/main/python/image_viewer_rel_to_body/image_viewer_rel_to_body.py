@@ -15,6 +15,7 @@ from text import main_prompt
 
 JUST_TRIM = True
 
+this_file = Path(__file__)
 
 parser = ArgParser("Script Options")
 parser.flag("open", "open the experiment in Chrome")
@@ -28,13 +29,13 @@ args = parser.parse_args()
 auth_json = load(this_file.parent.parent.joinpath(".auth.json"))
 
 user = oexp.login(auth_json["username"], auth_json["password"])
-exp = user.experiment("image_viewer")
+exp = user.experiment("image_viewer_rel_to_body")
 
 if not args.analyze:
 
     hotcss = args.hotcss
 
-    STYLE_FILE = this_file.parent.joinpath("image_viewer.scss")
+    STYLE_FILE = this_file.parent.joinpath("image_viewer_rel_to_body.scss")
 
     if not JUST_TRIM:
         exp.delete_all_images()
@@ -73,24 +74,35 @@ if not args.analyze:
     manifests = []
 
     def create_manifest(yaws, pitches, seed):
-        if len(pitches) != len(yaws):
-            error("pitches and yaws must be same length")
         choices = [
             oexp.access.choice(
-                text="",
                 value=c.name.replace(".png", ""),
                 image=oexp.access.image(remote_path=c.name, one_shot=False),
+                text=""
             )
             for c in choice_image_files
             if abs(util.yaw(c)) in yaws and abs(util.pitch(c)) in pitches
         ]
         choices = sorted(choices, key=util.custom_comparator)
-        choices.append(oexp.access.choice(value="None", image=None))
+        base_choices = choices.copy()
+        choices = []
+        i = 0
+        first = True
+        for b in base_choices:
+            if first:
+                first = False
+            else:
+                choices.append(
+                    oexp.access.choice(value=f"...{i}", image=None, text="...")
+                )
+                i += 1
+            choices.append(b)
+        # choices.append(oexp.access.choice(value=f"...{i}", image=None, text="..."))
         rand = random.Random(seed)
         for m in range(1):
             trials = [
                 oexp.access.prompt(
-                    text=main_prompt(none_choice=choices[-1].value),
+                    text=main_prompt(),
                     image=None,
                 )
             ]
@@ -111,13 +123,11 @@ if not args.analyze:
                 trials.append(trial)
             manifests.append(
                 oexp.access.trial_manifest(
-                    trials, css_vars={"box-length": str(len(yaws) * 2 - 1)}
+                    trials, css_vars={"box-length": str(len(yaws) * 4 - 2)}
                 )
             )
 
-    create_manifest(yaws=[0, 45, 90], pitches=[0, 15, 30], seed=99753)
-    create_manifest(yaws=[0, 10, 45, 90], pitches=[0, 5, 15, 30], seed=756234)
-    create_manifest(yaws=[0, 5, 10, 45, 90], pitches=[0, 5, 10, 25, 30], seed=8435)
+    create_manifest(yaws=[0, 30, 60, 90], pitches=[0], seed=54235)
 
     exp.manifests = manifests
     exp.scss = read(STYLE_FILE)

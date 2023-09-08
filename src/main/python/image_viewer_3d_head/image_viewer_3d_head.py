@@ -9,6 +9,7 @@ import sys
 
 sys.path.append(str(this_file.parent.parent))
 import util
+
 from mstuff.argparser import ArgParser
 from mstuff.mstuff import error, read, load
 from text import main_prompt
@@ -28,13 +29,13 @@ args = parser.parse_args()
 auth_json = load(this_file.parent.parent.joinpath(".auth.json"))
 
 user = oexp.login(auth_json["username"], auth_json["password"])
-exp = user.experiment("image_viewer")
+exp = user.experiment("image_viewer_3d_head")
 
 if not args.analyze:
 
     hotcss = args.hotcss
 
-    STYLE_FILE = this_file.parent.joinpath("image_viewer.scss")
+    STYLE_FILE = this_file.parent.joinpath("image_viewer_3d_head.scss")
 
     if not JUST_TRIM:
         exp.delete_all_images()
@@ -47,6 +48,9 @@ if not args.analyze:
     trials_json = load(trials_json)
 
     with exp.image_upload_session() as upload_session:
+
+
+
         for trial in trials_json:
             ims = [trial["query"], trial["queryGallery"]]
             for d in trial["distractors"]:
@@ -58,39 +62,25 @@ if not args.analyze:
 
         uploaded_images = exp.list_images()
 
-        choice_folder = Path(
-            "/Users/matthewgroth/registered/data/iarpa/facial_orientations/output"
+        upload_session.upload_image_async_efficient(
+            local_abs_path="/Users/matthewgroth/registered/data/iarpa/facial_orientations/input/BustBaseMesh_Obj/BustBaseMesh_Decimated.obj",
+            remote_rel_path="BustBaseMesh_Decimated.obj",
         )
-        choice_image_files = [
-            choice_folder.joinpath(f) for f in glob.glob(str(choice_folder) + "/*.png")
-        ]
-
-        for c in choice_image_files:
-            upload_session.upload_image_async_efficient(
-                local_abs_path=str(c), remote_rel_path=c.name
-            )
 
     manifests = []
+
+    the_orient = oexp.access.orient(image=oexp.access.image(remote_path="BustBaseMesh_Decimated.obj",one_shot=False))
 
     def create_manifest(yaws, pitches, seed):
         if len(pitches) != len(yaws):
             error("pitches and yaws must be same length")
-        choices = [
-            oexp.access.choice(
-                text="",
-                value=c.name.replace(".png", ""),
-                image=oexp.access.image(remote_path=c.name, one_shot=False),
-            )
-            for c in choice_image_files
-            if abs(util.yaw(c)) in yaws and abs(util.pitch(c)) in pitches
-        ]
-        choices = sorted(choices, key=util.custom_comparator)
-        choices.append(oexp.access.choice(value="None", image=None))
+
+
         rand = random.Random(seed)
         for m in range(1):
             trials = [
                 oexp.access.prompt(
-                    text=main_prompt(none_choice=choices[-1].value),
+                    text="insert 3d head prompt here",
                     image=None,
                 )
             ]
@@ -104,9 +94,9 @@ if not args.analyze:
                     all_ims.append(d)
             rand.shuffle(all_ims)
             for an_im in all_ims:
-                trial = oexp.access.choice_trial(
+                trial = oexp.access.orient_trial(
                     image=oexp.access.image(remote_path=an_im, one_shot=True),
-                    choices=choices,
+                    orient=the_orient,
                 )
                 trials.append(trial)
             manifests.append(

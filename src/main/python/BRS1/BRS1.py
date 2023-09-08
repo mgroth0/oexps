@@ -1,13 +1,13 @@
 import json
 import random
 from pathlib import Path
-import oexp
-import argparse
 
-parser = argparse.ArgumentParser(description='Open or print experiment URL')
-# parser.add_argument('url', type=str, help='the experiment URL')
-parser.add_argument('-o', '--open', action='store_true', help='open the experiment in Chrome')
-parser.add_argument('-p', '--print', action='store_true', help='print the experiment URL')
+import oexp
+from mstuff.argparser import ArgParser
+
+parser = ArgParser("Open or print experiment URL")
+parser.flag("open", "open the experiment in Chrome")
+parser.flag("print", "print the experiment URL")
 
 args = parser.parse_args()
 
@@ -23,7 +23,9 @@ user = oexp.login(auth_json["username"], auth_json["password"])
 exp = user.experiment("BRS1")
 exp.delete_all_images()
 
-extract_root = Path("/Users/matthewgroth/registered/data/BriarExtracts/BRS1_extract_for_oexp")
+extract_root = Path(
+    "/Users/matthewgroth/registered/data/BriarExtracts/BRS1_extract_for_oexp"
+)
 data_root = extract_root.joinpath("data")
 
 trials_json = extract_root.joinpath("trials.json")
@@ -38,18 +40,15 @@ for trial in trials_json:
     for d in trial["distractors"]:
         ims.append(d)
     for im in ims:
-        exp.upload_image(
-            local_abs_path=str(data_root.joinpath(im)),
-            remote_rel_path=im
-        )
+        exp.upload_image(local_abs_path=str(data_root.joinpath(im)), remote_rel_path=im)
 
 exp.upload_image(
     local_abs_path="/Users/matthewgroth/registered/ide/all/k/iarpa/src/jvmTest/resources/Example_Online_BRIAR_1.jpg",
-    remote_rel_path="Example_Online_BRIAR_1.jpg"
+    remote_rel_path="Example_Online_BRIAR_1.jpg",
 )
 exp.upload_image(
     local_abs_path="/Users/matthewgroth/registered/ide/all/k/iarpa/src/jvmTest/resources/Example_Online_BRIAR_2.jpg",
-    remote_rel_path="Example_Online_BRIAR_2.jpg"
+    remote_rel_path="Example_Online_BRIAR_2.jpg",
 )
 
 rand = random.Random(23084)
@@ -66,7 +65,7 @@ You will be presented with an image of a face at the top of the screen and asked
 
 Press SPACEBAR to see an example.
   """.strip(),
-            image=None
+            image=None,
         ),
         oexp.access.prompt(
             text="""
@@ -74,7 +73,7 @@ By clicking on the images in the bottom row, you will indicate which are the top
 
 Press SPACEBAR to continue example.
 	  """.strip(),
-            image="Example_Online_BRIAR_1.jpg"
+            image="Example_Online_BRIAR_1.jpg",
         ),
         oexp.access.prompt(
             text="""
@@ -83,7 +82,7 @@ If you want to change your choices - click the red reset button.
 
 Press SPACEBAR to start the experiment.
 	  """.strip(),
-            image="Example_Online_BRIAR_2.jpg"
+            image="Example_Online_BRIAR_2.jpg",
         ),
     ]
     trials_json_copy = trials_json.copy()
@@ -91,10 +90,7 @@ Press SPACEBAR to start the experiment.
     for t in trials_json_copy:
         distractors = [t["queryGallery"], *t["distractors"]]
         rand.shuffle(distractors)
-        trial = oexp.access.trial(
-            query=t["query"],
-            distractors=distractors
-        )
+        trial = oexp.access.trial(query=t["query"], distractors=distractors)
         trials.append(trial)
     manifests.append(oexp.access.trial_manifest(trials))
 exp.manifests = manifests
