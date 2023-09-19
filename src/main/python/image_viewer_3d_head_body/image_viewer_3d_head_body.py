@@ -9,13 +9,13 @@ import sys
 
 sys.path.append(str(this_file.parent.parent))
 import util
+
 from mstuff.argparser import ArgParser
 from mstuff.mstuff import error, read, load
 from text import main_prompt
 
 JUST_TRIM = True
 
-this_file = Path(__file__)
 
 parser = ArgParser("Script Options")
 parser.flag("open", "open the experiment in Chrome")
@@ -23,19 +23,21 @@ parser.flag("print", "print the experiment URL")
 parser.flag("hotcss", "css hot reloading", short="c")
 parser.flag("analyze", "analyze data")
 parser.int("manifest", "manifest number")
+parser.flag("demographics", "open with the demographics form")
+parser.str("lab_key", "lab key to allow testing without PID")
 
 args = parser.parse_args()
 
 auth_json = load(this_file.parent.parent.joinpath(".auth.json"))
 
 user = oexp.login(auth_json["username"], auth_json["password"])
-exp = user.experiment("image_viewer_rel_to_body")
+exp = user.experiment("image_viewer_3d_head_body")
 
 if not args.analyze:
 
     hotcss = args.hotcss
 
-    STYLE_FILE = this_file.parent.joinpath("image_viewer_rel_to_body.scss")
+    STYLE_FILE = this_file.parent.joinpath("image_viewer_3d_head_body.scss")
 
     if not JUST_TRIM:
         exp.delete_all_images()
@@ -59,50 +61,40 @@ if not args.analyze:
 
         uploaded_images = exp.list_images()
 
-        choice_folder = Path(
-            "/Users/matthewgroth/registered/data/iarpa/facial_orientations/output"
+        upload_session.upload_image_async_efficient(
+            local_abs_path="/Users/matthewgroth/registered/data/iarpa/facial_orientations/input/BustBaseMesh_Obj/BustBaseMesh_Decimated.obj",
+            remote_rel_path="BustBaseMesh_Decimated.obj",
         )
-        choice_image_files = [
-            choice_folder.joinpath(f) for f in glob.glob(str(choice_folder) + "/*.png")
-        ]
 
-        for c in choice_image_files:
-            upload_session.upload_image_async_efficient(
-                local_abs_path=str(c), remote_rel_path=c.name
-            )
+
+        upload_session.upload_image_async_efficient(
+            local_abs_path="/Users/matthewgroth/registered/data/iarpa/body_orientations/input/lowPolyMan1.obj",
+            remote_rel_path="lowPolyMan1.obj",
+        )
 
     manifests = []
 
+    the_face_orient = oexp.access.orient(
+        image=oexp.access.image(
+            remote_path="BustBaseMesh_Decimated.obj", one_shot=False
+        )
+    )
+    the_body_orient = oexp.access.orient(
+        image=oexp.access.image(
+            remote_path="lowPolyMan1.obj", one_shot=False
+        )
+    )
+
+
     def create_manifest(yaws, pitches, seed):
-        choices = [
-            oexp.access.choice(
-                value=c.name.replace(".png", ""),
-                image=oexp.access.image(remote_path=c.name, one_shot=False),
-                text=""
-            )
-            for c in choice_image_files
-            if abs(util.yaw(c)) in yaws and abs(util.pitch(c)) in pitches
-        ]
-        choices = sorted(choices, key=util.custom_comparator)
-        base_choices = choices.copy()
-        choices = []
-        i = 0
-        first = True
-        for b in base_choices:
-            if first:
-                first = False
-            else:
-                choices.append(
-                    oexp.access.choice(value=f"...{i}", image=None, text="...")
-                )
-                i += 1
-            choices.append(b)
-        # choices.append(oexp.access.choice(value=f"...{i}", image=None, text="..."))
+        if len(pitches) != len(yaws):
+            error("pitches and yaws must be same length")
+
         rand = random.Random(seed)
         for m in range(1):
             trials = [
                 oexp.access.prompt(
-                    text=main_prompt(),
+                    text="insert 3d head(+body) prompt here",
                     image=None,
                 )
             ]
@@ -116,18 +108,31 @@ if not args.analyze:
                     all_ims.append(d)
             rand.shuffle(all_ims)
             for an_im in all_ims:
-                trial = oexp.access.choice_trial(
+
+
+                body_trial = oexp.access.orient_trial(
                     image=oexp.access.image(remote_path=an_im, one_shot=True),
-                    choices=choices,
+                    orient=the_body_orient,
                 )
-                trials.append(trial)
+                trials.append(body_trial)
+
+                face_trial = oexp.access.orient_trial(
+                    image=oexp.access.image(remote_path=an_im, one_shot=True),
+                    orient=the_face_orient,
+                )
+                trials.append(face_trial)
+
+
+
             manifests.append(
                 oexp.access.trial_manifest(
-                    trials, css_vars={"box-length": str(len(yaws) * 4 - 2)}
+                    trials, css_vars={"box-length": str(len(yaws) * 2 - 1)}
                 )
             )
 
-    create_manifest(yaws=[0, 30, 60, 90], pitches=[0], seed=54235)
+    create_manifest(yaws=[0, 45, 90], pitches=[0, 15, 30], seed=99753)
+    create_manifest(yaws=[0, 10, 45, 90], pitches=[0, 5, 15, 30], seed=756234)
+    create_manifest(yaws=[0, 5, 10, 45, 90], pitches=[0, 5, 10, 25, 30], seed=8435)
 
     exp.manifests = manifests
     exp.scss = read(STYLE_FILE)
@@ -149,6 +154,8 @@ if not args.analyze:
             allow_fullscreen_exit=True,
             hot_css=hotcss,
             man_num=args.manifest,
+            demographics=args.demographics,
+            lab_key=args.lab_key,
         )
 
     if hotcss:

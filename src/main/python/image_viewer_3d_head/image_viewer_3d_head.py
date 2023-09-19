@@ -48,9 +48,6 @@ if not args.analyze:
     trials_json = load(trials_json)
 
     with exp.image_upload_session() as upload_session:
-
-
-
         for trial in trials_json:
             ims = [trial["query"], trial["queryGallery"]]
             for d in trial["distractors"]:
