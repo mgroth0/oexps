@@ -66,7 +66,6 @@ if not args.analyze:
             remote_rel_path="BustBaseMesh_Decimated.obj",
         )
 
-
         upload_session.upload_image_async_efficient(
             local_abs_path="/Users/matthewgroth/registered/data/iarpa/body_orientations/input/lowPolyMan1.obj",
             remote_rel_path="lowPolyMan1.obj",
@@ -80,11 +79,11 @@ if not args.analyze:
         )
     )
     the_body_orient = oexp.access.orient(
-        image=oexp.access.image(
-            remote_path="lowPolyMan1.obj", one_shot=False
-        )
+        image=oexp.access.image(remote_path="lowPolyMan1.obj", one_shot=False),
+        offsets=oexp.access.xyz(x=0.0, y=-0.6, z=-1.0),
+        # offsets=oexp.access.xyz(x=0.0, y=-0.6, z=-0.0),
+        rotate_pitch=False,
     )
-
 
     def create_manifest(yaws, pitches, seed):
         if len(pitches) != len(yaws):
@@ -109,7 +108,6 @@ if not args.analyze:
             rand.shuffle(all_ims)
             for an_im in all_ims:
 
-
                 body_trial = oexp.access.orient_trial(
                     image=oexp.access.image(remote_path=an_im, one_shot=True),
                     orient=the_body_orient,
@@ -121,8 +119,6 @@ if not args.analyze:
                     orient=the_face_orient,
                 )
                 trials.append(face_trial)
-
-
 
             manifests.append(
                 oexp.access.trial_manifest(
@@ -145,7 +141,14 @@ if not args.analyze:
     if args.print:
         print(
             "Sharable Experiment URL:",
-            exp.session_url(hot_css=hotcss, man_num=args.manifest),
+            exp.session_url(
+                disable_auto_fullscreen=True,
+                allow_fullscreen_exit=True,
+                hot_css=hotcss,
+                man_num=args.manifest,
+                demographics=args.demographics,
+                lab_key=args.lab_key,
+            ),
         )
 
     if args.open:
