@@ -1,3 +1,6 @@
+
+# purpose of this is a quick demo. It is similar to BRS1. The main difference is that I copied the dataset and manually edited the first 3 query iamges to show full, head, and body. This experiment does not shuffle trial order so the first 3 trials can work as a demo
+
 import json
 import random
 from pathlib import Path
@@ -14,24 +17,20 @@ args = parser.parse_args()
 
 this_file = Path(__file__)
 
-STYLE_FILE = this_file.parent.joinpath("BRS1.css")
+STYLE_FILE = this_file.parent.joinpath("BRS1.scss")
 
 with open(this_file.parent.parent.joinpath(".auth.json")) as f:
     auth_json = json.loads(f.read())
 
 user = oexp.login(auth_json["username"], auth_json["password"])
 
-exp = user.experiment("BRS1")
+exp = user.experiment("BRS1_quick_head_body_check")
 exp.delete_all_images()
 
 extract_root = Path(
-    "/Users/matthewgroth/registered/data/BriarExtracts/BRS1_extract_for_oexp"
+    "/Users/matthewgroth/registered/data/BriarExtracts/BRS1_extract_for_oexp_quick_manual_copy_edit"
 )
 data_root = extract_root.joinpath("data")
-
-example_root = Path(
-    "/Users/matthewgroth/registered/ide/all/k/iarpa/src/jvmTest/resources"
-)
 
 trials_json = extract_root.joinpath("trials.json")
 with open(trials_json) as f:
@@ -47,12 +46,14 @@ for trial in trials_json:
     for im in ims:
         exp.upload_image(local_abs_path=str(data_root.joinpath(im)), remote_rel_path=im)
 
+
+
 exp.upload_image(
-    local_abs_path=str(example_root.joinpath("Example_Online_BRIAR_1.jpg")),
+    local_abs_path="/Users/matthewgroth/registered/ide/all/k/iarpa/src/jvmTest/resources/Example_Online_BRIAR_1.jpg",
     remote_rel_path="Example_Online_BRIAR_1.jpg",
 )
 exp.upload_image(
-    local_abs_path=str(example_root.joinpath("Example_Online_BRIAR_2.jpg")),
+    local_abs_path="/Users/matthewgroth/registered/ide/all/k/iarpa/src/jvmTest/resources/Example_Online_BRIAR_2.jpg",
     remote_rel_path="Example_Online_BRIAR_2.jpg",
 )
 
@@ -95,41 +96,43 @@ Press SPACEBAR to start the experiment.
         ),
     ]
     trials_json_copy = trials_json.copy()
-    rand.shuffle(trials_json_copy)
+    # rand.shuffle(trials_json_copy) # dont shuffle, since I manually edited the top 3 trials
     for t in trials_json_copy:
         distractors = [
-            oexp.access.image(remote_path=t["queryGallery"], one_shot=True),
-            *[
-                oexp.access.image(remote_path=im, one_shot=True)
-                for im in t["distractors"]
-            ],
-        ]
+
+            oexp.access.image(
+
+                remote_path=t["queryGallery"],
+
+                one_shot=True
+            )
+
+            , *[oexp.access.image(
+
+                remote_path=im,
+
+                one_shot=True
+            )  for im in  t["distractors"]]]
         rand.shuffle(distractors)
-        query_image = oexp.access.image(remote_path=t["query"], one_shot=True)
-        trial = oexp.access.gallery_trial(query=query_image, distractors=distractors)
+        query_image = oexp.access.image(
+
+            remote_path=t["query"],
+
+            one_shot=True
+        )
+        trial = oexp.access.gallery_trial(query= query_image, distractors=distractors)
         trials.append(trial)
     manifests.append(oexp.access.trial_manifest(trials))
 exp.manifests = manifests
 with open(STYLE_FILE, "r") as f:
-    exp.css = f.read()
+    exp.scss = f.read()
 
-exp.link_prolific("652f27353557cfe04cef60e4")
+# exp.link_prolific("64887b7cd8e3bc6a8ac0ebaa")
 
 if args.print:
-    print(
-        "Sharable Experiment URL:",
-        exp.session_url(
-            disable_auto_fullscreen=True,
-            allow_fullscreen_exit=True,
-            lab_key=args.lab_key,
-        ),
-    )
+    print("Sharable Experiment URL:", exp.session_url(disable_auto_fullscreen=True, allow_fullscreen_exit=True,lab_key=args.lab_key,))
 
 if args.open:
-    exp.open(
-        disable_auto_fullscreen=True,
-        allow_fullscreen_exit=True,
-        lab_key=args.lab_key,
-    )
+    exp.open(disable_auto_fullscreen=True, allow_fullscreen_exit=True,lab_key=args.lab_key,)
 
 args = parser.parse_args()

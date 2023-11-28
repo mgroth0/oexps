@@ -1,0 +1,7 @@
+@use "../base_gallery_experiment.scss";
+
+
+.distractor-img {
+    object-fit: contain;
+    max-height: 300px;
+}

@@ -1,9 +1,6 @@
-body,
-body:fullscreen::backdrop {
-    /*fullscreen backdrop selector required because default browser user agent style sheet overrides this with a black background*/
-    background: #0f0f0f;
-}
+@use "base.scss";
 
+@include base.background(#0f0f0f);
 
 .trial-container {
     inset: 0;
@@ -99,4 +96,8 @@ body:fullscreen::backdrop {
     /*width: 400%;*/
     /*transform: translateX(-25%) translateY(-25%);*/
     /*z-index: -1;*/
+}
+
+.promptImage {
+    width: 75%;
 }

@@ -1,8 +1,6 @@
-body,
-body:fullscreen::backdrop {
-    /*fullscreen backdrop selector required because default browser user agent style sheet overrides this with a black background*/
-    background: grey;
-}
+@use "base.scss";
+
+@include base.background(grey);
 
 
 .trial-container {
@@ -44,32 +42,49 @@ body:fullscreen::backdrop {
     top: 50%;
     /*left: 50%;*/
     transform: translateX(-50%) translateY(-50%);
+    cursor: pointer;
+}
+.distractor-img:hover {
+    border: solid cyan 2px;
 }
 
 
 .selection-number {
     color: white;
     text-align: center;
+    transform: translateY(160px);
+    font-size: 25px;
 }
 
 
 .reset-btn, .continue-btn {
-    color: white;
     text-transform: capitalize;
     position: absolute;
-    width: 150px;
-    height: 40px;
+    width: 200px;
+    bottom: 40px;
+    color: white;
+    font-size: 16px;
+}
+
+.reset-btn:enabled .continue-btn:enabled {
+    cursor: pointer;
 }
 
 .reset-btn {
     background-color: red;
     left: 50px;
-    bottom: 40px;
+}
+
+.btn-text {
+
 }
 
 
 .continue-btn {
     background-color: blue;
-    bottom: 40px;
     right: 50px;
+}
+
+.fixation-cross {
+
 }
