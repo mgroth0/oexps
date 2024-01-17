@@ -1,3 +1,6 @@
 {
-  "type" : "AbstractModule"
+  "type": "AbstractModule",
+  "git": {
+    "public": true
+  }
 }
