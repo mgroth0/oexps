@@ -2,6 +2,9 @@
 
 @include base.background(grey);
 
+.promptText {
+    font-size: 28px;
+}
 
 .trial-container {
     position: absolute;
@@ -34,6 +37,7 @@
 }
 
 .distractor-container {
+    width: 30px; // hardcoding this to be non-zero fixes an issue where the images move a tiny bit when the number shows
     height: 800px;
 }
 
@@ -44,15 +48,19 @@
     transform: translateX(-50%) translateY(-50%);
     cursor: pointer;
 }
-.distractor-img:hover {
+.distractor-img:hover,
+.reset-btn:hover:enabled,
+.continue-btn:hover:enabled {
     border: solid cyan 2px;
 }
+
+
 
 
 .selection-number {
     color: white;
     text-align: center;
-    transform: translateY(160px);
+    transform: translateY(145px);
     font-size: 25px;
 }
 
@@ -66,8 +74,15 @@
     font-size: 16px;
 }
 
-.reset-btn:enabled .continue-btn:enabled {
+.reset-btn:enabled,
+.continue-btn:enabled {
     cursor: pointer;
+}
+
+.reset-btn:active:enabled,
+.continue-btn:active:enabled {
+    transform: scale(0.95);
+    filter: brightness(95%);
 }
 
 .reset-btn {
@@ -81,6 +96,10 @@
 
 
 .continue-btn {
+    right: 50px;
+}
+
+.continue-btn:enabled {
     background-color: blue;
     right: 50px;
 }
