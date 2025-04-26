@@ -2,16 +2,19 @@
 
 @include base.background(grey);
 
+//noinspection CssUnusedSymbol
 .promptText {
     font-size: 28px;
 }
 
+//noinspection CssBrowserCompatibilityForProperties,CssUnusedSymbol
 .trial-container {
     position: absolute;
     inset: 0;
 }
 
 
+//noinspection CssUnusedSymbol
 .target-img,
 .distractor-img {
     width: 150%;
@@ -24,6 +27,7 @@
     transform: translateY(-50%);
 }
 
+//noinspection CssBrowserCompatibilityForProperties,CssUnusedSymbol
 .distractors-container {
     position: absolute;
     top: 50%;
@@ -36,11 +40,13 @@
     transform: translateY(-50%);
 }
 
+//noinspection CssUnusedSymbol
 .distractor-container {
     width: 30px; // hardcoding this to be non-zero fixes an issue where the images move a tiny bit when the number shows
     height: 800px;
 }
 
+//noinspection CssUnusedSymbol
 .distractor-img {
     position: absolute;
     top: 50%;
@@ -48,6 +54,8 @@
     transform: translateX(-50%) translateY(-50%);
     cursor: pointer;
 }
+
+//noinspection CssUnusedSymbol
 .distractor-img:hover,
 .reset-btn:hover:enabled,
 .continue-btn:hover:enabled {
@@ -55,8 +63,7 @@
 }
 
 
-
-
+//noinspection CssUnusedSymbol
 .selection-number {
     color: white;
     text-align: center;
@@ -65,6 +72,7 @@
 }
 
 
+//noinspection CssUnusedSymbol
 .reset-btn, .continue-btn {
     text-transform: capitalize;
     position: absolute;
@@ -74,36 +82,43 @@
     font-size: 16px;
 }
 
+//noinspection CssUnusedSymbol
 .reset-btn:enabled,
 .continue-btn:enabled {
     cursor: pointer;
 }
 
+//noinspection CssUnusedSymbol
 .reset-btn:active:enabled,
 .continue-btn:active:enabled {
     transform: scale(0.95);
     filter: brightness(95%);
 }
 
+//noinspection CssUnusedSymbol
 .reset-btn {
     background-color: red;
     left: 50px;
 }
 
+//noinspection CssUnusedSymbol
 .btn-text {
 
 }
 
 
+//noinspection CssUnusedSymbol
 .continue-btn {
     right: 50px;
 }
 
+//noinspection CssUnusedSymbol
 .continue-btn:enabled {
     background-color: blue;
     right: 50px;
 }
 
+//noinspection CssUnusedSymbol
 .fixation-cross {
 
 }

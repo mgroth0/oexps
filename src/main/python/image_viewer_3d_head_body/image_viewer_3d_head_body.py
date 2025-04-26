@@ -1,5 +1,11 @@
+"""
+Alright here is my docstring
+"""
 raise Exception("this has been rewritten in kotlin")
+# noinspection PyUnreachableCode
 import random
+
+# noinspection PyCompatibility
 from pathlib import Path
 
 import oexp
@@ -31,6 +37,7 @@ args = parser.parse_args()
 
 auth_json = load(this_file.parent.parent.joinpath(".auth.json"))
 
+# noinspection PyUnresolvedReferences
 user = oexp.login(auth_json["username"], auth_json["password"])
 exp = user.experiment("image_viewer_3d_head_body")
 
@@ -46,6 +53,7 @@ if not args.analyze:
 
     if not JUST_TRIM:
         exp.delete_all_images()
+    # noinspection PyCompatibility
     extract_root = Path(
         f"/Users/matthewgroth/registered/data/BriarExtracts/{EXTRACT_NAME}"
     )
@@ -145,6 +153,8 @@ if not args.analyze:
     if args.test:
         ims = ims[:2]
 
+
+    # noinspection PyMissingOrEmptyDocstring
     def create_manifest(yaws, pitches, seed):
         global ims
         if len(pitches) != len(yaws):
@@ -152,6 +162,7 @@ if not args.analyze:
 
         rand = random.Random(seed)
         for m in range(1):
+            # noinspection PyCompatibility
             trials = [
                 oexp.access.prompt(
                     text=main_prompt(),

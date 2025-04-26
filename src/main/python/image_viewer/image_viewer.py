@@ -1,5 +1,9 @@
+"""
+Alright here is my docstring
+"""
 import glob
 import random
+# noinspection PyCompatibility
 from pathlib import Path
 
 import oexp
@@ -27,6 +31,7 @@ args = parser.parse_args()
 
 auth_json = load(this_file.parent.parent.joinpath(".auth.json"))
 
+# noinspection PyUnresolvedReferences
 user = oexp.login(auth_json["username"], auth_json["password"])
 exp = user.experiment("image_viewer")
 
@@ -72,9 +77,12 @@ if not args.analyze:
 
     manifests = []
 
+
+    # noinspection PyMissingOrEmptyDocstring,PyShadowingNames
     def create_manifest(yaws, pitches, seed):
         if len(pitches) != len(yaws):
             error("pitches and yaws must be same length")
+        # noinspection PyShadowingNames
         choices = [
             oexp.access.choice(
                 text="",
@@ -99,6 +107,7 @@ if not args.analyze:
 
             for t in trials_json_copy:
                 all_ims.append(t["query"])
+                # noinspection PyUnresolvedReferences
                 all_ims.append(t["queryGallery"])
                 for d in t["distractors"]:
                     all_ims.append(d)

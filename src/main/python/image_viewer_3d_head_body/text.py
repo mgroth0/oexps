@@ -1,3 +1,9 @@
+"""
+docstring
+"""
+
+
+# noinspection PyCompatibility,PyMissingOrEmptyDocstring
 def main_prompt():
     return f"""
 Welcome to the head and body orientation experiment.
@@ -17,6 +23,7 @@ Press the spacebar to continue
       """.strip()
 
 
+# noinspection PyCompatibility,PyMissingOrEmptyDocstring
 def review_instructions_prompt():
     return f"""
 

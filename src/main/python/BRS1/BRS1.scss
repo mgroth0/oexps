@@ -1,7 +1,9 @@
 @use "../base_gallery_experiment.scss";
 
 
+//noinspection CssUnusedSymbol
 .distractor-img {
+    //noinspection CssBrowserCompatibilityForProperties
     object-fit: contain;
     max-height: 300px;
 }

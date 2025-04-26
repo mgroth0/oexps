@@ -1,3 +1,4 @@
+"""here is my docstring"""
 from __future__ import annotations
 import dataclasses
 import itertools
@@ -22,6 +23,7 @@ NUM_PARTICIPANTS = 80
 import json
 import os
 import random
+# noinspection PyCompatibility
 from pathlib import Path
 
 import oexp
@@ -44,6 +46,7 @@ STYLE_FILE = this_file.parent.joinpath("BRS1_head_body_quick.scss")
 with open(this_file.parent.parent.joinpath(".auth.json")) as f:
     auth_json = json.loads(f.read())
 
+# noinspection PyUnresolvedReferences
 user = oexp.login(auth_json["username"], auth_json["password"])
 
 exp = user.experiment("BRS1_head_body_quick")
@@ -77,8 +80,7 @@ subject_matchings = [m for m in subject_matchings if m["q"] in existing_qs]
 # print(f"subject_matchings={subject_matchings}")
 
 
-
-
+# noinspection PyCompatibility,PyMissingOrEmptyDocstring,PyShadowingNames
 def find_query_image(subject_id, distance, suffix) -> str:
     subject_folder = query_image_folder.joinpath(subject_id.lower())
     if distance == 5:
@@ -119,6 +121,7 @@ if not os.path.exists(distractors_folder):
 available_distractor_images = os.listdir(distractors_folder)
 
 
+# noinspection PyCompatibility,PyMissingOrEmptyDocstring,PyShadowingNames
 def find_distractor_image(subject_id):
     id_lower = subject_id.lower()
     for d in available_distractor_images:
@@ -127,6 +130,7 @@ def find_distractor_image(subject_id):
     raise Exception(f"could not find subject_id={subject_id}")
 
 
+# noinspection PyCompatibility,PyMissingOrEmptyDocstring
 @dataclasses.dataclass
 class HeadBodyTrial:
     query_id: str
@@ -138,6 +142,7 @@ class HeadBodyTrial:
     trial_set: TrialSet
 
 
+# noinspection PyCompatibility,PyMissingOrEmptyDocstring
 class TrialSet:
     def __init__(self):
 
@@ -147,6 +152,7 @@ class TrialSet:
 
 
 all_trials = []
+# noinspection PyCompatibility
 print(f"{len(subject_matchings)=}")
 for matching in subject_matchings:
 
@@ -155,6 +161,7 @@ for matching in subject_matchings:
     for dist in distances:
         trial_set = TrialSet()
         for condition in conditions:
+            # noinspection PyCompatibility
             query_image = find_query_image(
                 subject_id=subject_id, distance=dist, suffix=f"{condition}.jpg"
             )
@@ -176,6 +183,7 @@ for matching in subject_matchings:
             else:
                 raise Exception("???")
             all_trials.append(t)
+# noinspection PyCompatibility
 print(f"{len(all_trials)=}")
 
 # print(f"size of all_trials: {len(all_trials)}")
@@ -185,11 +193,13 @@ EXAMPLE_IM_2 = "WB_examples_2.jpg"
 
 with exp.image_upload_session() as upload_session:
     # print("inside image upload session")
+    # noinspection PyCompatibility
     upload_session.upload_image_async_efficient(
         local_abs_path=f"/Users/matthewgroth/registered/ide/all/k/iarpa/src/jvmTest/resources/{EXAMPLE_IM_1}",
         remote_rel_path=EXAMPLE_IM_1,
     )
 
+    # noinspection PyCompatibility
     upload_session.upload_image_async_efficient(
         local_abs_path=f"/Users/matthewgroth/registered/ide/all/k/iarpa/src/jvmTest/resources/{EXAMPLE_IM_2}",
         remote_rel_path=EXAMPLE_IM_2,
@@ -236,12 +246,14 @@ for i in range(TRIAL_BATCHES_TO_GEN):
 t_candidate_index = -1
 
 
+# noinspection PyPep8Naming,PyMissingOrEmptyDocstring
 def swapPositions(li, pos1, pos2):
     li[pos1], li[pos2] = li[pos2], li[pos1]
 
 
 total_trials_needed = TRIALS_PER_SUBJECT * NUM_PARTICIPANTS
 if len(remaining_trials) < total_trials_needed:
+    # noinspection PyCompatibility
     raise Exception(
         f"need {total_trials_needed} trials, but only have {len(remaining_trials)}. Try increasing TRIAL_BATCHES_TO_GEN"
     )
@@ -270,7 +282,7 @@ Press SPACEBAR to see an example.
 By clicking on the images on the right side of the screen, you will indicate which are the top three most similar identities to the query identity on the left.
 
 Press SPACEBAR to continue example.
-	  """.strip(),
+      """.strip(),
             image=oexp.access.image(remote_path=EXAMPLE_IM_1, one_shot=False),
         ),
         oexp.access.prompt(
@@ -279,7 +291,7 @@ Once you have ranked your top three images, you can continue to the next trial (
 If you want to change your choices - click the red reset button.
 
 Press SPACEBAR to start the experiment.
-	  """.strip(),
+      """.strip(),
             image=oexp.access.image(remote_path=EXAMPLE_IM_2, one_shot=False),
         ),
     ]
@@ -301,6 +313,7 @@ Press SPACEBAR to start the experiment.
         next_trial_candidate = remaining_trials[t_candidate_index]
         if t_candidate_index == 0:
             if last_trials_check_size == len(my_trials):
+                # noinspection PyCompatibility
                 raise Exception(
                     f"not getting new trials ({i=}, {next_distance=},{ids_got=}). Try increasing TRIAL_BATCHES_TO_GEN"
                 )
@@ -331,8 +344,8 @@ Press SPACEBAR to start the experiment.
 
     rand.shuffle(my_trials)
     finished_trial_sets = set()
-    for i in range(len(my_trials)):
-        t = my_trials[i]
+    for ii in range(len(my_trials)):
+        t = my_trials[ii]
         t_set = t.trial_set
         if t_set in finished_trial_sets:
             continue
@@ -355,6 +368,7 @@ Press SPACEBAR to start the experiment.
     ONE_SHOT = True
 
     for t in my_trials:
+        # noinspection PyCompatibility
         distractors = [
             oexp.access.image(
                 remote_path=os.path.relpath(t.query_distractor, extract_root),
@@ -377,6 +391,7 @@ Press SPACEBAR to start the experiment.
 
     real_trials_len = len(trials) - intro_trials_len
     if real_trials_len != TRIALS_PER_SUBJECT:
+        # noinspection PyCompatibility
         raise Exception(
             f"expected {TRIALS_PER_SUBJECT} trials, but got {real_trials_len}"
         )
@@ -384,6 +399,7 @@ Press SPACEBAR to start the experiment.
 
 exp.manifests = manifests
 
+# noinspection PyArgumentEqualDefault
 with open(STYLE_FILE, "r") as f:
     exp.scss = f.read()
 

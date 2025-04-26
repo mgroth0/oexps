@@ -1,4 +1,8 @@
+"""
+docstring
+"""
 from dataclasses import dataclass
+# noinspection PyCompatibility
 from pathlib import Path
 
 import oexp
@@ -6,6 +10,7 @@ import oexp
 this_file = Path(__file__)
 
 
+# noinspection PyMissingOrEmptyDocstring
 def yaw(im):
     if isinstance(im,str):
         key = im
@@ -14,6 +19,7 @@ def yaw(im):
     return Orientation(key).yaw
 
 
+# noinspection PyMissingOrEmptyDocstring
 def pitch(im):
     if isinstance(im,str):
         key = im
@@ -21,6 +27,8 @@ def pitch(im):
         key = str(im)
     return Orientation(key).pitch
 
+
+# noinspection PyCompatibility,PyMissingOrEmptyDocstring
 @dataclass
 class Orientation:
     key: str
@@ -43,6 +51,7 @@ class Orientation:
         return p_value + y_value
 
 
+# noinspection PyMissingOrEmptyDocstring
 def custom_comparator(item: oexp.access.Choice):
     value = item.value
     o = Orientation(value)

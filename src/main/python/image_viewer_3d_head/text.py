@@ -1,3 +1,7 @@
+"""
+docstring
+"""
+# noinspection PyMissingOrEmptyDocstring,PyCompatibility
 def main_prompt(none_choice):
     return f"""
 Welcome to the Orientation Annotater.

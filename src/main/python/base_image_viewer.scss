@@ -2,6 +2,7 @@
 
 @include base.background(#0f0f0f);
 
+//noinspection CssBrowserCompatibilityForProperties
 .trial-container {
     inset: 0;
     padding-bottom: 5%;
@@ -12,6 +13,7 @@
 }
 
 
+//noinspection CssBrowserCompatibilityForProperties
 .target-img {
     /*position: absolute;*/
     height: 90%;
@@ -23,6 +25,7 @@
 }
 
 
+//noinspection CssBrowserCompatibilityForProperties
 .choices-container {
     display: flex;
     flex-direction: row;
@@ -54,8 +57,7 @@
 }
 
 
-
-
+//noinspection CssBrowserCompatibilityForProperties
 .choice-btn:hover {
   /*height: 200%;
     width: 200%;
@@ -76,6 +78,7 @@
 }
 
 
+//noinspection CssBrowserCompatibilityForProperties
 .choice-img {
     height: 120%;
     width: 120%;

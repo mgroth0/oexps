@@ -1,5 +1,10 @@
+"""
+Alright here is my docstring
+"""
+# noinspection PyUnresolvedReferences
 import glob
 import random
+# noinspection PyCompatibility
 from pathlib import Path
 
 import oexp
@@ -8,10 +13,12 @@ this_file = Path(__file__)
 import sys
 
 sys.path.append(str(this_file.parent.parent))
+# noinspection PyUnresolvedReferences
 import util
 
 from mstuff.argparser import ArgParser
 from mstuff.mstuff import error, read, load
+# noinspection PyUnresolvedReferences
 from text import main_prompt
 
 JUST_TRIM = True
@@ -28,6 +35,7 @@ args = parser.parse_args()
 
 auth_json = load(this_file.parent.parent.joinpath(".auth.json"))
 
+# noinspection PyUnresolvedReferences
 user = oexp.login(auth_json["username"], auth_json["password"])
 exp = user.experiment("image_viewer_3d_head")
 
@@ -68,6 +76,8 @@ if not args.analyze:
 
     the_orient = oexp.access.orient(image=oexp.access.image(remote_path="BustBaseMesh_Decimated.obj",one_shot=False))
 
+
+    # noinspection PyMissingOrEmptyDocstring
     def create_manifest(yaws, pitches, seed):
         if len(pitches) != len(yaws):
             error("pitches and yaws must be same length")
@@ -87,10 +97,12 @@ if not args.analyze:
             for t in trials_json_copy:
                 all_ims.append(t["query"])
                 all_ims.append(t["queryGallery"])
+                # noinspection PyShadowingNames
                 for d in t["distractors"]:
                     all_ims.append(d)
             rand.shuffle(all_ims)
             for an_im in all_ims:
+                # noinspection PyShadowingNames
                 trial = oexp.access.orient_trial(
                     image=oexp.access.image(remote_path=an_im, one_shot=True),
                     orient=the_orient,

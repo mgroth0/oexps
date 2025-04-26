@@ -1,8 +1,11 @@
-
+"""
+docstring
+"""
 # purpose of this is a quick demo. It is similar to BRS1. The main difference is that I copied the dataset and manually edited the first 3 query iamges to show full, head, and body. This experiment does not shuffle trial order so the first 3 trials can work as a demo
 
 import json
 import random
+# noinspection PyCompatibility
 from pathlib import Path
 
 import oexp
@@ -22,6 +25,7 @@ STYLE_FILE = this_file.parent.joinpath("BRS1.scss")
 with open(this_file.parent.parent.joinpath(".auth.json")) as f:
     auth_json = json.loads(f.read())
 
+# noinspection PyUnresolvedReferences
 user = oexp.login(auth_json["username"], auth_json["password"])
 
 exp = user.experiment("BRS1_quick_head_body_check")
@@ -38,6 +42,7 @@ with open(trials_json) as f:
 
 for trial in trials_json:
 
+    # noinspection PyListCreation
     ims = []
     ims.append(trial["query"])
     ims.append(trial["queryGallery"])
@@ -78,7 +83,7 @@ Press SPACEBAR to see an example.
 By clicking on the images in the bottom row, you will indicate which are the top three most similar identities to the identity at the top.
 
 Press SPACEBAR to continue example.
-	  """.strip(),
+      """.strip(),
             image=oexp.access.image(
                 remote_path="Example_Online_BRIAR_1.jpg", one_shot=False
             ),
@@ -89,7 +94,7 @@ Once you have ranked your top three images, you can continue to the next trial (
 If you want to change your choices - click the red reset button.
 
 Press SPACEBAR to start the experiment.
-	  """.strip(),
+      """.strip(),
             image=oexp.access.image(
                 remote_path="Example_Online_BRIAR_2.jpg", one_shot=False
             ),
@@ -98,6 +103,7 @@ Press SPACEBAR to start the experiment.
     trials_json_copy = trials_json.copy()
     # rand.shuffle(trials_json_copy) # dont shuffle, since I manually edited the top 3 trials
     for t in trials_json_copy:
+        # noinspection PyCompatibility
         distractors = [
 
             oexp.access.image(
@@ -124,6 +130,7 @@ Press SPACEBAR to start the experiment.
         trials.append(trial)
     manifests.append(oexp.access.trial_manifest(trials))
 exp.manifests = manifests
+# noinspection PyArgumentEqualDefault
 with open(STYLE_FILE, "r") as f:
     exp.scss = f.read()
 
